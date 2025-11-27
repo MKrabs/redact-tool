@@ -99,3 +99,27 @@ edit_replacements() {
 
     "$editor" "$PROFILES_DIR/$profile/replacements.txt"
 }
+
+load_profile_config() {
+    local profile="$1"
+    local config_file="$PROFILES_DIR/$profile/config.ini"
+
+    declare -gA CONFIG
+
+    if [[ ! -f "$config_file" ]]; then
+        err "Config file not found: $config_file"
+        return 1
+    fi
+
+    while IFS='=' read -r key value; do
+        # Skip empty lines and comments
+        [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
+        # Trim whitespace
+        key="${key#"${key%%[![:space:]]*}"}"
+        key="${key%"${key##*[![:space:]]}"}"
+        value="${value#"${value%%[![:space:]]*}"}"
+        value="${value%"${value##*[![:space:]]}"}"
+        CONFIG["$key"]="$value"
+    done < "$config_file"
+}
+
