@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+LIB="/usr/local/share/redact"
+
+source "$LIB/util.sh"
+source "$LIB/profile.sh"
+source "$LIB/replacer.sh"
+source "$LIB/core.sh"
+
+main "$@"
